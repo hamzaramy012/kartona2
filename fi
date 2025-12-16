@@ -1,0 +1,940 @@
+--- Ensure only one instance of the GUIs
+if game.CoreGui:FindFirstChild("KeySystem") then game.CoreGui.KeySystem:Destroy() end
+
+-- Key System GUI
+local KeyScreenGui = Instance.new("ScreenGui")
+KeyScreenGui.Name = "KeySystem"
+KeyScreenGui.Parent = game.CoreGui
+KeyScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Modern Key Frame UI
+local KeyFrame = Instance.new("Frame")
+KeyFrame.Name = "KeyFrame"
+KeyFrame.Size = UDim2.new(0, 340, 0, 260)
+KeyFrame.Position = UDim2.new(0.5, -170, 0.5, -130)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(48, 48, 54)
+KeyFrame.Parent = KeyScreenGui
+KeyFrame.Active = true
+KeyFrame.Draggable = true
+
+local KeyUICorner = Instance.new("UICorner")
+KeyUICorner.CornerRadius = UDim.new(0, 12)
+KeyUICorner.Parent = KeyFrame
+
+-- Close Button (top right)
+local KeyClose = Instance.new("TextButton")
+KeyClose.Size = UDim2.new(0, 32, 0, 32)
+KeyClose.Position = UDim2.new(1, -36, 0, 4)
+KeyClose.BackgroundTransparency = 1
+KeyClose.Text = "X"
+KeyClose.TextColor3 = Color3.fromRGB(255,255,255)
+KeyClose.Font = Enum.Font.SourceSansBold
+KeyClose.TextSize = 28
+KeyClose.Parent = KeyFrame
+KeyClose.MouseButton1Click:Connect(function()
+    KeyScreenGui:Destroy()
+end)
+
+-- Title (centered, bold, italic, white)
+local KeyTitle = Instance.new("TextLabel")
+KeyTitle.Size = UDim2.new(1, 0, 0, 50)
+KeyTitle.Position = UDim2.new(0, 0, 0, 10)
+KeyTitle.Text = "<b><i>Nexty Key System</i></b>"
+KeyTitle.TextColor3 = Color3.fromRGB(255,255,255)
+KeyTitle.BackgroundTransparency = 1
+KeyTitle.Font = Enum.Font.SourceSansBold
+KeyTitle.TextSize = 32
+KeyTitle.RichText = true
+KeyTitle.Parent = KeyFrame
+
+-- Add a visible label above the key input box
+local KeyInputLabel = Instance.new("TextLabel")
+KeyInputLabel.Size = UDim2.new(1, -40, 0, 20)
+KeyInputLabel.Position = UDim2.new(0, 20, 0, 50)
+KeyInputLabel.BackgroundTransparency = 1
+KeyInputLabel.Text = "Enter Key"
+KeyInputLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+KeyInputLabel.Font = Enum.Font.SourceSansBold
+KeyInputLabel.TextSize = 18
+KeyInputLabel.TextXAlignment = Enum.TextXAlignment.Left
+KeyInputLabel.Parent = KeyFrame
+
+-- Key Input
+local KeyInput = Instance.new("TextBox")
+KeyInput.Size = UDim2.new(1, -40, 0, 38)
+KeyInput.Position = UDim2.new(0, 20, 0, 70)
+KeyInput.ClearTextOnFocus = false
+KeyInput.TextEditable = true
+KeyInput.Text = ""
+KeyInput.PlaceholderText = "Enter Key"
+KeyInput.Font = Enum.Font.SourceSans
+KeyInput.TextSize = 20
+KeyInput.BackgroundColor3 = Color3.fromRGB(38, 38, 44)
+KeyInput.TextColor3 = Color3.fromRGB(255,255,255)
+KeyInput.Parent = KeyFrame
+KeyInput.TextTransparency = 1 -- Hide the real text
+
+-- Overlay a label to show dots for password masking (simple, always on top)
+local KeyInputMask = Instance.new("TextLabel")
+KeyInputMask.Size = KeyInput.Size
+KeyInputMask.Position = KeyInput.Position
+KeyInputMask.BackgroundTransparency = 1
+KeyInputMask.TextColor3 = KeyInput.TextColor3
+KeyInputMask.Font = KeyInput.Font
+KeyInputMask.TextSize = KeyInput.TextSize
+KeyInputMask.TextXAlignment = KeyInput.TextXAlignment
+KeyInputMask.TextYAlignment = KeyInput.TextYAlignment
+KeyInputMask.Parent = KeyFrame
+KeyInputMask.ZIndex = 999 -- Always on top
+KeyInputMask.Text = ""
+KeyInputMask.Active = false
+KeyInputMask.Selectable = false
+
+KeyInput:GetPropertyChangedSignal("Text"):Connect(function()
+    KeyInputMask.Text = string.rep("●", #KeyInput.Text)
+end)
+KeyInput:GetPropertyChangedSignal("Size"):Connect(function()
+    KeyInputMask.Size = KeyInput.Size
+end)
+KeyInput:GetPropertyChangedSignal("Position"):Connect(function()
+    KeyInputMask.Position = KeyInput.Position
+end)
+KeyInput:GetPropertyChangedSignal("ZIndex"):Connect(function()
+    KeyInputMask.ZIndex = KeyInput.ZIndex + 1
+end)
+
+-- Get Key Button
+local GetKeyBtn = Instance.new("TextButton")
+GetKeyBtn.Size = UDim2.new(0.45, -10, 0, 36)
+GetKeyBtn.Position = UDim2.new(0, 20, 0, 120)
+GetKeyBtn.Text = "Get Key"
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(64, 64, 70)
+GetKeyBtn.TextColor3 = Color3.fromRGB(255,255,255)
+GetKeyBtn.Font = Enum.Font.SourceSansBold
+GetKeyBtn.TextSize = 18
+GetKeyBtn.Parent = KeyFrame
+GetKeyBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://pastebin.com/eqLKXzGJ")
+    GetKeyBtn.Text = "Copied!"
+    wait(1)
+    GetKeyBtn.Text = "Get Key"
+end)
+
+-- Join Discord Button
+local DiscordBtn = Instance.new("TextButton")
+DiscordBtn.Size = UDim2.new(0.45, -10, 0, 36)
+DiscordBtn.Position = UDim2.new(0.45, 20, 0, 120) -- Move slightly inward from the left
+DiscordBtn.Text = "Join Discord"
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(64, 64, 70)
+DiscordBtn.TextColor3 = Color3.fromRGB(255,255,255)
+DiscordBtn.Font = Enum.Font.SourceSansBold
+DiscordBtn.TextSize = 18
+DiscordBtn.Parent = KeyFrame
+DiscordBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/2hVbV576ek")
+    DiscordBtn.Text = "Copied!"
+    wait(1)
+    DiscordBtn.Text = "Join Discord"
+end)
+
+-- Log In Button
+local LoginBtn = Instance.new("TextButton")
+LoginBtn.Size = UDim2.new(1, -40, 0, 42)
+LoginBtn.Position = UDim2.new(0, 20, 0, 180)
+LoginBtn.Text = "Log In"
+LoginBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+LoginBtn.TextColor3 = Color3.fromRGB(255,255,255)
+LoginBtn.Font = Enum.Font.SourceSansBold
+LoginBtn.TextSize = 22
+LoginBtn.Parent = KeyFrame
+
+local function grantAccess()
+    KeyInput:Destroy()
+    LoginBtn:Destroy()
+    KeyTitle.Text = "Access Granted!"
+    KeyTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+    wait(1)
+    KeyScreenGui:Destroy()
+
+    -- Main Frame
+    local Frame = Instance.new("Frame")
+    Frame.Size = UDim2.new(0, 700, 0, 540) -- Fixed size
+    Frame.Position = UDim2.new(0.5, -350, 0.5, -270)
+    Frame.BackgroundColor3 = Color3.fromRGB(16, 16, 18) -- Deep black, but not too intense
+    Frame.Active = false -- Only header will be draggable
+    Frame.Draggable = false
+    Frame.ClipsDescendants = true -- Prevents content from overflowing the rounded corners
+    Frame.Parent = game.CoreGui:FindFirstChild("ScreenGui") or Instance.new("ScreenGui", game.CoreGui)
+
+    local UICorner1 = Instance.new("UICorner")
+    UICorner1.CornerRadius = UDim.new(0, 12)
+    UICorner1.Parent = Frame
+
+    -- Add script name header at the top of the main Frame
+    local scriptHeader = Instance.new("TextLabel")
+    scriptHeader.Name = "ScriptHeader"
+    scriptHeader.Size = UDim2.new(1, 0, 0, 36)
+    scriptHeader.Position = UDim2.new(0, 0, 0, 0)
+    scriptHeader.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    scriptHeader.Text = "Nexty [Beta] - Script"
+    scriptHeader.TextStrokeTransparency = 0.5
+    scriptHeader.TextColor3 = Color3.fromRGB(0, 153, 255)
+    scriptHeader.Font = Enum.Font.SourceSansBold
+    scriptHeader.TextSize = 26
+    scriptHeader.TextXAlignment = Enum.TextXAlignment.Center
+    scriptHeader.TextYAlignment = Enum.TextYAlignment.Center
+    scriptHeader.Parent = Frame
+    scriptHeader.ZIndex = 2
+    scriptHeader.Active = true
+    scriptHeader.Draggable = false -- We'll handle dragging manually
+
+    -- Manual drag logic for header to move the main Frame
+    local UIS = game:GetService("UserInputService")
+    local dragging = false
+    local dragStart, startPos
+
+    scriptHeader.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
+        end
+    end)
+    scriptHeader.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    scriptHeader.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    -- Sidebar
+    local Sidebar = Instance.new("Frame")
+    Sidebar.Size = UDim2.new(0, 140, 1, 0)
+    Sidebar.Position = UDim2.new(0, 0, 0, 36)
+    Sidebar.BackgroundColor3 = Color3.fromRGB(16, 16, 18) -- Deep black, but not too intense
+    Sidebar.Parent = Frame
+
+    -- Sidebar buttons/pages
+    local pageNames = {"Main", "Players", "Bypasses", "AutoFarm", "Combat", "UI Settings"}
+    local pages = {}
+    local buttons = {}
+    local pageContents = {
+        ["Main"] = "",
+        ["Players"] = "",
+        ["Bypasses"] = "",
+        ["AutoFarm"] = "",
+        ["Combat"] = "",
+        ["UI Settings"] = ""
+    }
+    for i, name in ipairs(pageNames) do
+        -- Page
+        local page = Instance.new("Frame")
+        page.Name = name .. "Page"
+        page.Size = UDim2.new(1, -140, 1, 0)
+        page.Position = UDim2.new(0, 140, 0, 36)
+        page.BackgroundTransparency = 1
+        page.Visible = (i == 1)
+        page.Parent = Frame
+        pages[name] = page
+        -- Add a label to each page for translation
+        local label = Instance.new("TextLabel")
+        label.Name = name .. "Label"
+        label.Size = UDim2.new(0, -40, 0, 40)
+        label.Position = UDim2.new(0, 20, 0, 60)
+        label.BackgroundTransparency = 1
+        label.Text = pageContents[name]
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.Font = Enum.Font.SourceSansBold
+        label.TextSize = 28
+        label.TextWrapped = true
+        label.Parent = page
+        -- Sidebar button
+        local btn = Instance.new("TextButton")
+        btn.Name = name .. "Button"
+        btn.Size = UDim2.new(1, -16, 0, 36)
+        btn.Position = UDim2.new(0, 8, 0, 16 + (i-1)*44)
+        btn.BackgroundColor3 = (i == 1) and Color3.fromRGB(28,28,30) or Color3.fromRGB(20,20,22)
+        btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        btn.Text = name
+        btn.Font = Enum.Font.SourceSansBold
+        btn.TextSize = 18
+        btn.Parent = Sidebar
+        buttons[name] = btn
+    end
+
+    -- Add Visuel page and button
+    local VisuelPage = Instance.new("Frame")
+    VisuelPage.Name = "VisuelPage"
+    VisuelPage.Size = UDim2.new(1, -140, 1, 0)
+    VisuelPage.Position = UDim2.new(0, 140, 0, 36)
+    VisuelPage.BackgroundTransparency = 1
+    VisuelPage.Visible = false
+    VisuelPage.Parent = Frame
+    pages["Visuel"] = VisuelPage
+    -- Add Visuel button to sidebar
+    local visuelBtn = Instance.new("TextButton")
+    visuelBtn.Name = "VisuelButton"
+    visuelBtn.Size = UDim2.new(1, -16, 0, 36)
+    visuelBtn.Position = UDim2.new(0, 8, 0, 16 + (#pageNames)*44)
+    visuelBtn.BackgroundColor3 = Color3.fromRGB(20,20,22)
+    visuelBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    visuelBtn.Text = "Credit"
+    visuelBtn.Font = Enum.Font.SourceSansBold
+    visuelBtn.TextSize = 18
+    visuelBtn.Parent = Sidebar
+    buttons["Visuel"] = visuelBtn
+
+    -- Main Page Modern Panel Example
+    local mainPage = pages["Main"]
+    -- Remove all panels from the Main page (no content)
+    -- (No mainPanel, no Teleport, Dupe Guns, Gun Mods, or Inf Money panels)
+
+    -- Modern Combat Page UI (ESP, Hitbox Expander)
+    -- Helper function for toggles
+    local function createToggle(parent, labelText, default, pos)
+        local toggleFrame = Instance.new("Frame")
+        toggleFrame.Size = UDim2.new(1, -20, 0, 32)
+        toggleFrame.Position = pos
+        toggleFrame.BackgroundTransparency = 1
+        toggleFrame.Parent = parent
+
+        local label = Instance.new("TextLabel")
+        label.Text = labelText
+        label.Size = UDim2.new(0.7, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(220,220,220)
+        label.Font = Enum.Font.SourceSans
+        label.TextSize = 16
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = toggleFrame
+
+        local toggleBG = Instance.new("Frame")
+        toggleBG.Size = UDim2.new(0, 36, 0, 20)
+        toggleBG.Position = UDim2.new(1, -46, 0.5, -10)
+        toggleBG.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        toggleBG.Parent = toggleFrame
+        local toggleCorner = Instance.new("UICorner", toggleBG)
+        toggleCorner.CornerRadius = UDim.new(1,0)
+
+        local toggleKnob = Instance.new("Frame")
+        toggleKnob.Size = UDim2.new(0, 16, 0, 16)
+        toggleKnob.Position = default and UDim2.new(1, -18, 0, 2) or UDim2.new(0, 2, 0, 2)
+        toggleKnob.BackgroundColor3 = default and Color3.fromRGB(255,0,0) or Color3.fromRGB(30,30,30)
+        toggleKnob.Parent = toggleBG
+        local knobCorner = Instance.new("UICorner", toggleKnob)
+        knobCorner.CornerRadius = UDim.new(1,0)
+
+        local isToggled = default
+        toggleBG.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isToggled = not isToggled
+                if isToggled then
+                    toggleKnob.Position = UDim2.new(1, -18, 0, 2)
+                    toggleKnob.BackgroundColor3 = Color3.fromRGB(255,0,0)
+                else
+                    toggleKnob.Position = UDim2.new(0, 2, 0, 2)
+                    toggleKnob.BackgroundColor3 = Color3.fromRGB(30,30,30)
+                end
+            end
+        end)
+        return toggleFrame, function() return isToggled end
+    end
+
+    -- Helper function for sliders
+    local function createSlider(parent, labelText, min, max, default, pos, color)
+        local sliderFrame = Instance.new("Frame")
+        sliderFrame.Size = UDim2.new(1, -20, 0, 38)
+        sliderFrame.Position = pos
+        sliderFrame.BackgroundTransparency = 1
+        sliderFrame.Parent = parent
+
+        local label = Instance.new("TextLabel")
+        label.Text = labelText
+        label.Size = UDim2.new(0.5, 0, 0, 18)
+        label.Position = UDim2.new(0, 0, 0, 0)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(220,220,220)
+        label.Font = Enum.Font.SourceSans
+        label.TextSize = 15
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = sliderFrame
+
+        local valueLabel = Instance.new("TextLabel")
+        valueLabel.Text = tostring(default).."/"..tostring(max)
+        valueLabel.Size = UDim2.new(0.5, 0, 0, 18)
+        valueLabel.Position = UDim2.new(0.5, 0, 0, 0)
+        valueLabel.BackgroundTransparency = 1
+        valueLabel.TextColor3 = Color3.fromRGB(220,220,220)
+        valueLabel.Font = Enum.Font.SourceSans
+        valueLabel.TextSize = 15
+        valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+        valueLabel.Parent = sliderFrame
+
+        local sliderBG = Instance.new("Frame")
+        sliderBG.Size = UDim2.new(1, 0, 0, 8)
+        sliderBG.Position = UDim2.new(0, 0, 0, 24)
+        sliderBG.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        sliderBG.Parent = sliderFrame
+        local sliderCorner = Instance.new("UICorner", sliderBG)
+        sliderCorner.CornerRadius = UDim.new(1,0)
+
+        local sliderFill = Instance.new("Frame")
+        sliderFill.Size = UDim2.new((default-min)/(max-min), 0, 1, 0)
+        sliderFill.BackgroundColor3 = color or Color3.fromRGB(160, 90, 220)
+        sliderFill.Parent = sliderBG
+        local fillCorner = Instance.new("UICorner", sliderFill)
+        fillCorner.CornerRadius = UDim.new(1,0)
+
+        local dragging = false
+        local value = default
+        sliderBG.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = true
+            end
+        end)
+        sliderBG.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = false
+            end
+        end)
+        sliderBG.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                local rel = (input.Position.X - sliderBG.AbsolutePosition.X) / sliderBG.AbsoluteSize.X
+                rel = math.clamp(rel, 0, 1)
+                value = math.floor(min + (max-min)*rel + 0.5)
+                sliderFill.Size = UDim2.new(rel, 0, 1, 0)
+                valueLabel.Text = tostring(value).."/"..tostring(max)
+            end
+        end)
+        return sliderFrame, function() return value end
+    end
+
+    -- Helper for panel
+    local function createPanel(parent, title, pos)
+        local panel = Instance.new("Frame")
+        panel.Size = UDim2.new(0, 220, 0, 180)
+        panel.Position = pos
+        panel.BackgroundColor3 = Color3.fromRGB(24,24,24)
+        panel.Parent = parent
+        local panelCorner = Instance.new("UICorner", panel)
+        panelCorner.CornerRadius = UDim.new(0, 8)
+        local panelTitle = Instance.new("TextLabel")
+        panelTitle.Text = title
+        panelTitle.Size = UDim2.new(1, 0, 0, 24)
+        panelTitle.Position = UDim2.new(0, 12, 0, 8) -- moved 20px right, 8px down
+        panelTitle.BackgroundTransparency = 1
+        panelTitle.TextColor3 = Color3.fromRGB(255,255,255)
+        panelTitle.Font = Enum.Font.SourceSansBold
+        panelTitle.TextSize = 18
+        panelTitle.TextXAlignment = Enum.TextXAlignment.Left
+        panelTitle.Parent = panel
+        return panel
+    end
+
+    -- Add ESP, Hitbox Expander panels to Combat page
+    local combatPage = pages["Combat"]
+    -- ESP panel with only Name, Health, Distance, and Holding toggles in Combat page
+    local espPanel = createPanel(combatPage, "ESP", UDim2.new(0, 10, 0, 10))
+    local espToggles = {}
+    local espToggleNames = {"Name", "Health", "Distance", "Holding"}
+    for i, toggleName in ipairs(espToggleNames) do
+        local _, getToggle = createToggle(espPanel, toggleName, false, UDim2.new(0, 10, 0, 30 + (i-1)*32))
+        espToggles[toggleName] = getToggle
+    end
+
+    local hitboxPanel = createPanel(combatPage, "Hitbox Expander", UDim2.new(0, 240, 0, 10))
+    local hitboxToggle, getHitboxToggle = createToggle(hitboxPanel, "Enable Hitbox Expand", false, UDim2.new(0, 10, 0, 30))
+    local _, getHitboxSize = createSlider(hitboxPanel, "Hitbox Size", 5, 100, 5, UDim2.new(0, 10, 0, 70), Color3.fromRGB(0, 153, 255))
+    -- Store default size for reset
+    local DEFAULT_HITBOX_SIZE = Vector3.new(2, 2, 1)
+    local function setHitboxSize(size)
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = player.Character.HumanoidRootPart
+                if getHitboxToggle() then
+                    hrp.Size = Vector3.new(size, size, size)
+                    hrp.Transparency = 0.5
+                    hrp.CanCollide = false
+                else
+                    hrp.Size = DEFAULT_HITBOX_SIZE
+                    hrp.Transparency = 1
+                    hrp.CanCollide = true
+                end
+            end
+        end
+    end
+    -- Update hitboxes in a loop
+    spawn(function()
+        local lastToggle, lastSize = false, 5
+        while Frame and Frame.Parent do
+            local enabled = getHitboxToggle()
+            local size = getHitboxSize()
+            if enabled ~= lastToggle or size ~= lastSize then
+                setHitboxSize(size)
+                lastToggle, lastSize = enabled, size
+            end
+            wait(0.2)
+        end
+        -- Reset hitboxes on GUI close
+        setHitboxSize(5)
+    end)
+
+    -- ESP Drawing Logic
+    local espFolder = Instance.new("Folder")
+    espFolder.Name = "NextyESPFolder"
+    espFolder.Parent = game.CoreGui
+
+    local function clearESP()
+        for _, v in ipairs(espFolder:GetChildren()) do
+            v:Destroy()
+        end
+    end
+
+    local function getPlayerHolding(player)
+        local char = player.Character
+        if char and char:FindFirstChildOfClass("Tool") then
+            return char:FindFirstChildOfClass("Tool").Name
+        end
+        return ""
+    end
+
+    local function updateESP()
+        clearESP()
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = player.Character.HumanoidRootPart
+                local bb = Instance.new("BillboardGui")
+                bb.Name = "NextyESP"
+                bb.Adornee = hrp
+                bb.Size = UDim2.new(0, 200, 0, 60)
+                bb.StudsOffset = Vector3.new(0, 3, 0)
+                bb.AlwaysOnTop = true
+                bb.Parent = espFolder
+                local y = 0
+                if espToggles["Name"]() then
+                    local nameLbl = Instance.new("TextLabel")
+                    nameLbl.Size = UDim2.new(1, 0, 0, 16)
+                    nameLbl.Position = UDim2.new(0, 0, 0, y)
+                    nameLbl.BackgroundTransparency = 1
+                    nameLbl.Text = player.Name
+                    nameLbl.TextColor3 = Color3.fromRGB(0, 153, 255)
+                    nameLbl.Font = Enum.Font.SourceSansBold
+                    nameLbl.TextSize = 14
+                    nameLbl.Parent = bb
+                    y = y + 16
+                end
+                if espToggles["Health"]() and player.Character:FindFirstChild("Humanoid") then
+                    local healthLbl = Instance.new("TextLabel")
+                    healthLbl.Size = UDim2.new(1, 0, 0, 16)
+                    healthLbl.Position = UDim2.new(0, 0, 0, y)
+                    healthLbl.BackgroundTransparency = 1
+                    healthLbl.Text = "Health: " .. math.floor(player.Character.Humanoid.Health)
+                    healthLbl.TextColor3 = Color3.fromRGB(0, 255, 0)
+                    healthLbl.Font = Enum.Font.SourceSans
+                    healthLbl.TextSize = 13
+                    healthLbl.Parent = bb
+                    y = y + 16
+                end
+                if espToggles["Distance"]() then
+                    local dist = (hrp.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                    local distLbl = Instance.new("TextLabel")
+                    distLbl.Size = UDim2.new(1, 0, 0, 16)
+                    distLbl.Position = UDim2.new(0, 0, 0, y)
+                    distLbl.BackgroundTransparency = 1
+                    distLbl.Text = "Distance: " .. math.floor(dist)
+                    distLbl.TextColor3 = Color3.fromRGB(255, 255, 0)
+                    distLbl.Font = Enum.Font.SourceSans
+                    distLbl.TextSize = 13
+                    distLbl.Parent = bb
+                    y = y + 16
+                end
+                if espToggles["Holding"]() then
+                    local holding = getPlayerHolding(player)
+                    if holding ~= "" then
+                        local holdLbl = Instance.new("TextLabel")
+                        holdLbl.Size = UDim2.new(1, 0, 0, 16)
+                        holdLbl.Position = UDim2.new(0, 0, 0, y)
+                        holdLbl.BackgroundTransparency = 1
+                        holdLbl.Text = "Holding: " .. holding
+                        holdLbl.TextColor3 = Color3.fromRGB(255, 128, 0)
+                        holdLbl.Font = Enum.Font.SourceSans
+                        holdLbl.TextSize = 13
+                        holdLbl.Parent = bb
+                        y = y + 16
+                    end
+                end
+            end
+        end
+    end
+
+    -- ESP update loop
+    spawn(function()
+        while Frame and Frame.Parent do
+            updateESP()
+            wait(0.3)
+        end
+        clearESP()
+    end)
+
+    -- ESP toggles logic: print enabled features every 2 seconds
+    spawn(function()
+        while Frame and Frame.Parent do
+            local enabled = {}
+            for _, name in ipairs(espToggleNames) do
+                if espToggles[name]() then table.insert(enabled, name) end
+            end
+            print("[ESP Enabled]: ", table.concat(enabled, ", "))
+            wait(2)
+        end
+    end)
+
+    local function setActivePage(name)
+        for j, n in ipairs(pageNames) do
+            pages[n].Visible = (n == name)
+            buttons[n].BackgroundColor3 = (n == name) and Color3.fromRGB(28,28,30) or Color3.fromRGB(20,20,22)
+        end
+        VisuelPage.Visible = (name == "Visuel")
+        visuelBtn.BackgroundColor3 = (name == "Visuel") and Color3.fromRGB(28,28,30) or Color3.fromRGB(20,20,22)
+    end
+
+    -- Update all sidebar button connections to use setActivePage
+    for i, name in ipairs(pageNames) do
+        buttons[name].MouseButton1Click:Connect(function()
+            setActivePage(name)
+        end)
+    end
+    visuelBtn.MouseButton1Click:Connect(function()
+        setActivePage("Visuel")
+    end)
+
+    -- Close button
+    local FrameCloseButton = Instance.new("TextButton")
+    FrameCloseButton.Name = "FrameCloseButton"
+    FrameCloseButton.Size = UDim2.new(0, 36, 0, 36)
+    FrameCloseButton.Position = UDim2.new(1, -44, 0, 0)
+    FrameCloseButton.BackgroundTransparency = 1
+    FrameCloseButton.Text = "X"
+    FrameCloseButton.TextColor3 = Color3.fromRGB(220, 0, 0)
+    FrameCloseButton.Font = Enum.Font.SourceSansBold
+    FrameCloseButton.TextSize = 32
+    FrameCloseButton.Parent = Frame
+    FrameCloseButton.ZIndex = 10
+    FrameCloseButton.TextStrokeTransparency = 0.5
+    FrameCloseButton.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+    FrameCloseButton.MouseButton1Click:Connect(function()
+        Frame:Destroy()
+    end)
+
+    -- Add resize handle (bottom right corner)
+    local resizeHandle = Instance.new("ImageButton")
+    resizeHandle.Name = "ResizeHandle"
+    resizeHandle.Size = UDim2.new(0, 24, 0, 24)
+    resizeHandle.Position = UDim2.new(1, -24, 1, -24)
+    resizeHandle.BackgroundTransparency = 1
+    resizeHandle.Image = "rbxassetid://277768736" -- Standard resize icon
+    resizeHandle.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    resizeHandle.Parent = Frame
+    resizeHandle.ZIndex = 20
+
+    local minWidth, minHeight = 400, 300
+    local resizing = false
+    local resizeStart, frameStartSize
+
+    resizeHandle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = true
+            resizeStart = input.Position
+            frameStartSize = Frame.Size
+        end
+    end)
+    resizeHandle.InputChanged:Connect(function(input)
+        if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - resizeStart
+            local newWidth = math.max(minWidth, frameStartSize.X.Offset + delta.X)
+            local newHeight = math.max(minHeight, frameStartSize.Y.Offset + delta.Y)
+            Frame.Size = UDim2.new(frameStartSize.X.Scale, newWidth, frameStartSize.Y.Scale, newHeight)
+        end
+    end)
+    resizeHandle.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = false
+        end
+    end)
+
+    -- Right Shift toggle visibility
+    local UIS = game:GetService("UserInputService")
+    local visible = true
+    UIS.InputBegan:Connect(function(input, processed)
+        if not processed and input.KeyCode == Enum.KeyCode.RightShift then
+            visible = not visible
+            Frame.Visible = visible
+        end
+    end)
+
+    -- Players Page Modern Panel Example
+    local playersPage = pages["Players"]
+
+    -- Player Movement Panel (bigger, moved down)
+    local movementPanel = Instance.new("Frame")
+    movementPanel.Size = UDim2.new(0, 260, 0, 210) -- slightly bigger
+    movementPanel.Position = UDim2.new(0, 10, 0, 20) -- moved down
+    movementPanel.BackgroundColor3 = Color3.fromRGB(24,24,24)
+    movementPanel.Parent = playersPage
+    local movementPanelCorner = Instance.new("UICorner", movementPanel)
+    movementPanelCorner.CornerRadius = UDim.new(0, 8)
+    local movementPanelTitle = Instance.new("TextLabel")
+    movementPanelTitle.Text = "Player Movement"
+    movementPanelTitle.Size = UDim2.new(1, 0, 0, 24)
+    movementPanelTitle.Position = UDim2.new(0, 12, 0, 8)
+    movementPanelTitle.BackgroundTransparency = 1
+    movementPanelTitle.TextColor3 = Color3.fromRGB(255,255,255)
+    movementPanelTitle.Font = Enum.Font.SourceSansBold
+    movementPanelTitle.TextSize = 18
+    movementPanelTitle.TextXAlignment = Enum.TextXAlignment.Left
+    movementPanelTitle.Parent = movementPanel
+
+    -- Walkspeed Slider (blue line)
+    local walkspeedSlider, getWalkspeed = createSlider(movementPanel, "Change walkspeed", 16, 200, 16, UDim2.new(0, 12, 0, 28), Color3.fromRGB(0, 153, 255))
+    -- Flyspeed Slider (blue line)
+    local flyspeedSlider, getFlyspeed = createSlider(movementPanel, "Change Fly speed", 200, 1000, 200, UDim2.new(0, 12, 0, 60), Color3.fromRGB(0, 153, 255))
+
+    -- Toggles (fit all in frame, tighter spacing)
+    local wsToggle, getWSToggle = createToggle(movementPanel, "Walk Speed", false, UDim2.new(0, 12, 0, 88))
+    local flyToggle, getFlyToggle = createToggle(movementPanel, "Enable Fly", false, UDim2.new(0, 12, 0, 112))
+    local infJumpToggle, getInfJumpToggle = createToggle(movementPanel, "Infinite Jump", false, UDim2.new(0, 12, 0, 136))
+    local noclipToggle, getNoclipToggle = createToggle(movementPanel, "Noclip", false, UDim2.new(0, 12, 0, 160))
+
+    -- Target Panel
+    local targetPanel = Instance.new("Frame")
+    targetPanel.Size = UDim2.new(0, 240, 0, 250)
+    targetPanel.Position = UDim2.new(0, 280, 0, 20)
+    targetPanel.BackgroundColor3 = Color3.fromRGB(24,24,24)
+    targetPanel.Parent = playersPage
+    local targetPanelCorner = Instance.new("UICorner", targetPanel)
+    targetPanelCorner.CornerRadius = UDim.new(0, 8)
+    local targetPanelTitle = Instance.new("TextLabel")
+    targetPanelTitle.Text = "Target"
+    targetPanelTitle.Size = UDim2.new(1, 0, 0, 24)
+    targetPanelTitle.Position = UDim2.new(0, 12, 0, 8)
+    targetPanelTitle.BackgroundTransparency = 1
+    targetPanelTitle.TextColor3 = Color3.fromRGB(255,255,255)
+    targetPanelTitle.Font = Enum.Font.SourceSansBold
+    targetPanelTitle.TextSize = 18
+    targetPanelTitle.TextXAlignment = Enum.TextXAlignment.Left
+    targetPanelTitle.Parent = targetPanel
+
+    -- Dropdown (fake)
+    local playerDropdown = Instance.new("TextButton")
+    playerDropdown.Size = UDim2.new(1, -24, 0, 32)
+    playerDropdown.Position = UDim2.new(0, 12, 0, 36)
+    playerDropdown.BackgroundColor3 = Color3.fromRGB(32,32,32)
+    playerDropdown.TextColor3 = Color3.fromRGB(220,220,220)
+    playerDropdown.Text = "Select Player  ▼"
+    playerDropdown.Font = Enum.Font.SourceSans
+    playerDropdown.TextSize = 16
+    playerDropdown.Parent = targetPanel
+    local playerDropdownCorner = Instance.new("UICorner", playerDropdown)
+    playerDropdownCorner.CornerRadius = UDim.new(0, 6)
+
+    -- Target Toggles
+    local spectateToggle, getSpectateToggle = createToggle(targetPanel, "Spectate Player", false, UDim2.new(0, 12, 0, 74))
+    local killToggle, getKillToggle = createToggle(targetPanel, "Kill/Bring Player", false, UDim2.new(0, 12, 0, 106))
+    local bringAllToggle, getBringAllToggle = createToggle(targetPanel, "Bring all", false, UDim2.new(0, 12, 0, 138))
+
+    -- Target Buttons
+    local tpToPlayerBtn = Instance.new("TextButton")
+    tpToPlayerBtn.Size = UDim2.new(1, -24, 0, 32)
+    tpToPlayerBtn.Position = UDim2.new(0, 12, 0, 170)
+    tpToPlayerBtn.BackgroundColor3 = Color3.fromRGB(32,32,32)
+    tpToPlayerBtn.TextColor3 = Color3.fromRGB(220,220,220)
+    tpToPlayerBtn.Text = "Teleport to Player"
+    tpToPlayerBtn.Font = Enum.Font.SourceSansBold
+    tpToPlayerBtn.TextSize = 16
+    tpToPlayerBtn.Parent = targetPanel
+    local tpToPlayerBtnCorner = Instance.new("UICorner", tpToPlayerBtn)
+    tpToPlayerBtnCorner.CornerRadius = UDim.new(0, 6)
+
+    local refreshBtn = Instance.new("TextButton")
+    refreshBtn.Size = UDim2.new(1, -24, 0, 32)
+    refreshBtn.Position = UDim2.new(0, 12, 0, 206)
+    refreshBtn.BackgroundColor3 = Color3.fromRGB(32,32,32)
+    refreshBtn.TextColor3 = Color3.fromRGB(220,220,220)
+    refreshBtn.Text = "Refresh Player List"
+    refreshBtn.Font = Enum.Font.SourceSansBold
+    refreshBtn.TextSize = 16
+    refreshBtn.Parent = targetPanel
+    local refreshBtnCorner = Instance.new("UICorner", refreshBtn)
+    refreshBtnCorner.CornerRadius = UDim.new(0, 6)
+
+    -- Player Movement Logic
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    local UserInputService = game:GetService("UserInputService")
+    local RunService = game:GetService("RunService")
+
+    -- Helper to get humanoid
+    local function getHumanoid()
+        local char = LocalPlayer.Character
+        if char then
+            return char:FindFirstChildOfClass("Humanoid")
+        end
+        return nil
+    end
+
+    -- Walk Speed logic
+    local wsConn
+    local function updateWalkSpeed()
+        local hum = getHumanoid()
+        if hum then
+            if getWSToggle() then
+                hum.WalkSpeed = getWalkspeed()
+            else
+                hum.WalkSpeed = 16
+            end
+        end
+    end
+    wsConn = RunService.RenderStepped:Connect(function()
+        updateWalkSpeed()
+    end)
+
+    -- Fly logic
+    local flyConn
+    local flying = false
+    local flySpeed = 200
+    local function setFly(state)
+        local char = LocalPlayer.Character
+        local hum = getHumanoid()
+        if not char or not hum then return end
+        if state and not flying then
+            flying = true
+            hum.PlatformStand = true
+            local root = char:FindFirstChild("HumanoidRootPart")
+            flyConn = RunService.RenderStepped:Connect(function()
+                if not getFlyToggle() then return end
+                local moveVec = Vector3.new(0,0,0)
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveVec = moveVec + workspace.CurrentCamera.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveVec = moveVec - workspace.CurrentCamera.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveVec = moveVec - workspace.CurrentCamera.CFrame.RightVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveVec = moveVec + workspace.CurrentCamera.CFrame.RightVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveVec = moveVec + Vector3.new(0,1,0) end
+                if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then moveVec = moveVec - Vector3.new(0,1,0) end
+                if root then
+                    root.Velocity = moveVec.Unit * getFlyspeed()
+                end
+            end)
+        elseif not state and flying then
+            flying = false
+            if flyConn then flyConn:Disconnect() flyConn = nil end
+            hum.PlatformStand = false
+            local root = char:FindFirstChild("HumanoidRootPart")
+            if root then root.Velocity = Vector3.new(0,0,0) end
+        end
+    end
+    -- Listen for fly toggle
+    spawn(function()
+        local last = false
+        while movementPanel and movementPanel.Parent do
+            local now = getFlyToggle()
+            if now ~= last then
+                setFly(now)
+                last = now
+            end
+            flySpeed = getFlyspeed()
+            wait(0.1)
+        end
+        setFly(false)
+    end)
+
+    -- Infinite Jump logic
+    local infJumpConn
+    local function infJumpHandler(actionName, inputState, inputObj)
+        if getInfJumpToggle() and inputState == Enum.UserInputState.Begin then
+            local hum = getHumanoid()
+            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+        end
+    end
+    spawn(function()
+        local last = false
+        while movementPanel and movementPanel.Parent do
+            local now = getInfJumpToggle()
+            if now ~= last then
+                if now then
+                    if not infJumpConn then
+                        infJumpConn = UserInputService.JumpRequest:Connect(function()
+                            local hum = getHumanoid()
+                            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+                        end)
+                    end
+                else
+                    if infJumpConn then infJumpConn:Disconnect() infJumpConn = nil end
+                end
+                last = now
+            end
+            wait(0.1)
+        end
+        if infJumpConn then infJumpConn:Disconnect() infJumpConn = nil end
+    end)
+
+    -- Noclip logic
+    local noclipConn
+    local function setNoclip(state)
+        if state then
+            if not noclipConn then
+                noclipConn = RunService.Stepped:Connect(function()
+                    if getNoclipToggle() then
+                        local char = LocalPlayer.Character
+                        if char then
+                            for _, part in ipairs(char:GetDescendants()) do
+                                if part:IsA("BasePart") and part.CanCollide then
+                                    part.CanCollide = false
+                                end
+                            end
+                        end
+                    end
+                end)
+            end
+        else
+            if noclipConn then noclipConn:Disconnect() noclipConn = nil end
+            local char = LocalPlayer.Character
+            if char then
+                for _, part in ipairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end
+    spawn(function()
+        local last = false
+        while movementPanel and movementPanel.Parent do
+            local now = getNoclipToggle()
+            if now ~= last then
+                setNoclip(now)
+                last = now
+            end
+            wait(0.1)
+        end
+        setNoclip(false)
+    end)
+    -- End Player Movement Logic
+end
+
+local function checkKey()
+    if KeyInput.Text == "Nexty V" then
+        grantAccess()
+    else
+        KeyInput.Text = ""
+        KeyInput.PlaceholderText = "Wrong key! Try again..."
+    end
+end
+
+LoginBtn.MouseButton1Click:Connect(checkKey)
+KeyInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then checkKey() end
+end)
